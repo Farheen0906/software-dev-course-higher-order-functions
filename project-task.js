@@ -44,7 +44,22 @@ Step-by-Step:
 3. Return the filtered result.
 */
 
+// Defining function filterProducts with two parameters
+function filterProducts(productArray, callback) {
+  //applying .filter() with callback, so it runs for every element in the array
+  // and stores the ones that return true in the filteredResult array
+  const filteredResult = productArray.filter(callback);
+  //returning the result
+  return filteredResult;
+}
 
+//calling the filterProduct funtion based on product availability
+const availableItems = filterProducts(products, product => product.inStock === true);
+console.log("Avaialble Products: ", availableItems);
+
+//calling the filterProduct funtion based on price threshold
+const exclusiveItems = filterProducts(products, product => product.price > 500);
+console.log("Products over $500: ", exclusiveItems);
 /*
 🔹 Task 2: Transform Product Names
 
@@ -55,6 +70,20 @@ Step-by-Step:
 2. Extract and transform the `name` property to uppercase.
 3. Store the result in a new variable.
 */
+
+//*********Returning only the 'name' property*************
+
+//Applying map method to transform the `name` property to uppercase
+const upperCaseProductNames = products.map(product => product.name.toUpperCase());
+console.log("Transforming 'name' property to uppercase :",upperCaseProductNames);
+
+//*********If we want to return the whole array after transformation**********
+
+//Applying map method on product array to convert 'name' property to uppercase and returning the whole array
+//'...' spread operator is used to copy all the array elements 
+const upperCaseNames = products.map(item => ({...item, name:item.name.toUpperCase()}));
+console.log("\n Products Array after transforming 'name' property to uppercase :",upperCaseNames);
+
 
 
 /*
@@ -71,6 +100,22 @@ Step-by-Step:
 4. Print the array of products to verify the new property and value have been added to each product object.
 */
 
+//Defining function applyDiscount
+function applyDiscount(discountPercent) {
+  //Return a new function that takes a product object
+  return function (product){ 
+    const discount =  product.price * (discountPercent/100);
+   //Adding new salePrice property to product object
+    product.salePrice = product.price - discount ;
+    //returning the product object
+   return product;
+   }
+}
+//Applying forEach method on function to apply discount on every product of object
+products.forEach(applyDiscount(10));
+//verifying new property salePrice
+console.log("Discounted products:", products);
+
 
 /*
 🔹 Task 4: Calculate Total Inventory Value
@@ -82,6 +127,24 @@ Step-by-Step:
 2. Add only the prices of products where `inStock` is true.
 3. Store the total in a new variable.
 */
+
+//Scenario:1----Applying reduce method on the availableItems array(which is already available from task 1)
+
+const totalValue = availableItems.reduce((accumulator,product) => accumulator + product.price, 0);
+console.log("Total value in stock:",totalValue);
+
+
+//Scenario:2 ---- If we do not have an available items array
+
+//Applying reduce method on products array
+const totalValueInStock = products.reduce((accumulator,product) =>{
+  if(product.inStock === true)
+    return accumulator + product.price; //Adding the prices of instock products
+  else
+    return accumulator; // If there are no items instock returns accumulator
+},0); // We are assigning the initial value to 0
+console.log("Total value in stock:",totalValueInStock);
+
 
 
 // ============================================
